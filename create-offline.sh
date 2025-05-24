@@ -2,25 +2,23 @@
 
 set -e
 
-# Determine script directory
+echo "[INFO] Starting offline profile packaging..."
+
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 download_dir="$script_dir/download"
 offline_dir="$script_dir/processed/offline"
 
-# Safety check
 if [ ! -d "$download_dir" ]; then
-  echo -e "\nError: 'download' directory not found. Please run 'make download' first.\n"
+  echo -e "\n[ERROR] 'download' directory not found. Please run 'make download' first.\n"
   exit 1
 fi
 
-# Clean and prepare offline directory
+echo "[INFO] Preparing offline directory..."
 rm -rf "$offline_dir"
 mkdir -p "$offline_dir"
 
-# Define input folders
 folders=("caribou-fff" "non-caribou-fff" "non-caribou-sla")
 
-# Manifest entries map
 declare -A names=(
   [caribou-fff]="Caribou FFF"
   [non-caribou-fff]="Non-Caribou FFF"
@@ -32,17 +30,18 @@ declare -A descriptions=(
   [non-caribou-sla]="Non-Caribou SLA printer profiles"
 )
 
-# Copy folders into offline
 for folder in "${folders[@]}"; do
+  echo "[INFO] Processing: $folder"
   src_folder="$download_dir/$folder"
   dest_folder="$offline_dir/$folder"
+
   cp -r "$src_folder" "$dest_folder"
 
-  # Remove unnecessary files
+  echo "[INFO] Cleaning unnecessary files in: $dest_folder"
   rm -f "$dest_folder/vendor_indices.zip"
   rm -f "$dest_folder/manifest.json"
 
-  # Replace URLs and identifiers in ini files
+  echo "[INFO] Updating .ini files in: $folder"
   find "$dest_folder" -type f -name "*.ini" | while read -r ini_file; do
     vendor_name=$(basename "$(dirname "$ini_file")")
     sed -i 's|config_update_url = .*|config_update_url = https://caribou3d.com/CaribouSlicer/preset-repo/settings-master/'"$vendor_name"'/|g' "$ini_file"
@@ -55,14 +54,14 @@ for folder in "${folders[@]}"; do
     sed -i 's/prusa-sla/non-caribou-sla/g' "$ini_file"
   done
 
-  # Zip all .idx files into vendor_indices.zip and remove them
+  echo "[INFO] Creating vendor_indices.zip for: $folder"
   pushd "$dest_folder" > /dev/null
   if ls *.idx 1> /dev/null 2>&1; then
     zip -o vendor_indices.zip *.idx
     rm -f *.idx
   fi
 
-  # Write manifest.json for this folder
+  echo "[INFO] Writing manifest.json for: $folder"
   cat > "manifest.json" <<EOF
 {
   "name": "${names[$folder]}",
@@ -75,11 +74,11 @@ for folder in "${folders[@]}"; do
 }
 EOF
 
-  # Zip entire folder content and move one level up
+  echo "[INFO] Zipping complete folder: $folder"
   zip_name="${folder}-offline.zip"
   zip -rq "../$zip_name" ./*
   popd > /dev/null
 
 done
 
-echo "Offline preset package ready in: $offline_dir"
+echo "✅ Offline preset package ready in: $offline_dir"

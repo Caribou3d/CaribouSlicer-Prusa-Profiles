@@ -38,9 +38,9 @@ for key in "${!urls[@]}"; do
   fi
 
   # Remove outer zip, inner zip, and manifest if present
-#  rm -f "$zip_file"
-#  rm -f "$folder/vendor_indices.zip"
-#  rm -f "$folder/manifest.json"
+  rm -f "$zip_file"
+  rm -f "$folder/vendor_indices.zip"
+  rm -f "$folder/manifest.json"
 done
 
 # Rename non-prusa folders
