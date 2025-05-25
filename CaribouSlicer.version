@@ -1,21 +1,21 @@
-2.8.1
+2.9.2
 alpha=
 beta=
 
 [common]
-release = 2.8.1
+release = 2.9.2
 alpha =
 beta = 
 rc =
 
 [release:win64]
-url = https://github.com/Caribou3d/CaribouSlicer-Prusa/releases/download/ver_2.8.1/CaribouSlicer-2.8.1-25646-win64.zip
-size = 85982169
+url = https://github.com/Caribou3d/CaribouSlicer-Prusa/releases/download/ver_2.9.2/CaribouSlicer-2.9.2-26441-win64.zip
+size = 101585434
 
 [release:linux]
-url = https://github.com/Caribou3d/CaribouSlicer-Prusa/releases/download/ver_2.8.0/CaribouSlicer-2.8.1-25646-Linux-x64-GTK3.tgz
-size = 98775347
+url = https://github.com/Caribou3d/CaribouSlicer-Prusa/releases/download/ver_2.9.2/CaribouSlicer-2.9.2-26441-Linux-x64-GTK3.tgz
+size = 120022947
 
 [release:osx]
-url = https://github.com/Caribou3d/CaribouSlicer-Prusa/releases/download/ver_2.8.0/CaribouSlicer-2.8.1-25646-macOS.dmg
-size = 92941850
+url = https://github.com/Caribou3d/CaribouSlicer-Prusa/releases/download/ver_2.9.2/CaribouSlicer-2.9.2-26441-macOS.dmg
+size = 112591049
