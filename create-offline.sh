@@ -13,6 +13,10 @@ if [ ! -d "$download_dir" ]; then
   exit 1
 fi
 
+echo "[INFO] Copying Caribou profiles ..."
+rm -rf "$download_dir/caribou-fff"
+cp -r "$script_dir/caribou-fff" "$download_dir/caribou-fff"
+
 echo "[INFO] Preparing offline directory..."
 rm -rf "$offline_dir"
 mkdir -p "$offline_dir"

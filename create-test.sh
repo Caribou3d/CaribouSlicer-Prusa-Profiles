@@ -14,7 +14,7 @@ if [ ! -d "$download_dir" ]; then
   exit 0
 fi
 
-echo "[INFO] Copying test profile source..."
+echo "[INFO] Copying Caribou test profiles ..."
 rm -rf "$download_dir/caribou-fff"
 cp -r "$script_dir/caribou-fff-test" "$download_dir/caribou-fff"
 

@@ -14,24 +14,29 @@ if [ ! -d "$download_dir" ]; then
   exit 0
 fi
 
+echo "[INFO] Copying Caribou profiles ..."
+rm -rf "$download_dir/caribou-fff"
+cp -r "$script_dir/caribou-fff" "$download_dir/caribou-fff"
+
 echo "[INFO] Cleaning old processed directory..."
-rm -rf ./processed
+rm -rf ./processed/upload
+rm -rf ./processed/profiles
 
 echo "[INFO] Creating directory structure..."
-mkdir -p ./processed/preset-repo/settings-master
+mkdir -p ./processed/upload/preset-repo/settings-master
 mkdir -p ./processed/profiles
-mkdir -p ./processed/repository/vendors
+mkdir -p ./processed/upload/repository/vendors
 
 base_dir="./download"
 sources=("$base_dir/caribou-fff" "$base_dir/non-caribou-fff" "$base_dir/non-caribou-sla")
 
-settings_dest="./processed/preset-repo/settings-master"
+settings_dest="./processed/upload/preset-repo/settings-master"
 profiles_dest="./processed/profiles"
-repository_dest="./processed/repository/vendors"
+repository_dest="./processed/upload/repository/vendors"
 
-cp ArchiveRepositoryManifest.json ./processed/preset-repo/
+cp ArchiveRepositoryManifest.json ./processed/upload/preset-repo/
 cp ArchiveRepositoryManifest.json ./processed/profiles/
-cp CaribouSlicer.version ./processed/
+cp CaribouSlicer.version ./processed/upload
 
 for src in "${sources[@]}"; do
     echo "[INFO] Processing vendors from: $src"
@@ -47,7 +52,7 @@ for src in "${sources[@]}"; do
     cp -r "$src"/* "$profiles_dest"/
     cp -r "$src"/* "$repository_dest"/
 
-echo "[INFO] Done processing: $src"
+    echo "[INFO] Done processing: $src"
 done
 
 for idx_file in "$profiles_dest"/*.idx; do
@@ -80,17 +85,17 @@ done
 
 for src in "${sources[@]}"; do
     folder=$(basename "$src")
-    cp -r "$src" ./processed/preset-repo/$folder
-    for ini_file in ./processed/preset-repo/"$folder"/*/*.ini; do
+    cp -r "$src" ./processed/upload/preset-repo/$folder
+    for ini_file in ./processed/upload/preset-repo/"$folder"/*/*.ini; do
         vendor_name=$(basename $(dirname "$ini_file"))
         sed -i 's|config_update_url = .*|config_update_url = https://caribou3d.com/CaribouSlicer/preset-repo/settings-master/'"$vendor_name"'/|g' "$ini_file"
         sed -i 's|^[#[:space:]]*changelog_url[[:space:]]*=.*|# changelog_url =|g' "$ini_file"
         sed -i 's|files.prusa3d.com/wp-content/uploads/repository/PrusaSlicer-settings-master/live/|caribou3d.com/CaribouSlicer/repository/vendors/|g' "$ini_file"
         sed -i 's/ PrusaSlicer/ CaribouSlicer/g' "$ini_file"
     done
-    echo "[INFO] Updated .ini files in ./processed/preset-repo/$folder"
+    echo "[INFO] Updated .ini files in ./processed/upload/preset-repo/$folder"
 
-    dir_path="./processed/preset-repo/$folder"
+    dir_path="./processed/upload/preset-repo/$folder"
     echo "[INFO] Zipping .idx files in: $dir_path"
     if find "$dir_path" -maxdepth 1 -name "*.idx" | grep -q "."; then
         pushd "$dir_path" > /dev/null || continue
@@ -102,7 +107,7 @@ for src in "${sources[@]}"; do
         echo "[INFO] No .idx files found in $dir_path"
     fi
 
-    find ./processed/preset-repo/"$folder"/* -type f ! \( -name "*.ini" -o -name "vendor_indices.zip" \) -exec rm -f {} +
+    find ./processed/upload/preset-repo/"$folder"/* -type f ! \( -name "*.ini" -o -name "vendor_indices.zip" \) -exec rm -f {} +
 done
 
 find "$repository_dest" -type f -name "*.ini" | while read -r ini_file; do
