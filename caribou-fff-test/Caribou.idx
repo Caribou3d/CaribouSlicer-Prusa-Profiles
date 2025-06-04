@@ -1,4 +1,5 @@
 min_slic3r_version = 2.9.1-alpha0
+0.6.5 set default skirts=2, skirt height=1
 0.6.4 added older versions for compatibility
 0.6.3 bugfix Flex Filament
 0.6.2 another test update
