@@ -16,7 +16,7 @@ help:
 	@echo "  make profiles   - Run the script to generate profiles from downloaded content"
 	@echo "  make offline    - Generate zipped offline profiles with manifests"
 	@echo "  make test       - Run the test setup using caribou-fff-test into processed-test"
-	@echo "  make clean      - Delete 'download', 'processed', and 'processed-test' directories"
+	@echo "  make clean      - Delete 'processed', and 'processed-test' directories"
 	@echo "  make all        - Run download, profiles, and offline packaging"
 
 profiles:
@@ -36,6 +36,6 @@ test:
 	$(TEST_SCRIPT)
 
 clean:
-	rm -rf download processed processed-test
+	rm -rf processed processed-test
 
 all: download profiles offline
