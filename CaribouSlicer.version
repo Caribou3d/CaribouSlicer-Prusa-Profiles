@@ -18,5 +18,5 @@ size = 120089975
 
 [release:osx]
 url = https://github.com/Caribou3d/CaribouSlicer-Prusa/releases/download/ver_2.9.6/CaribouSlicer-2.9.6-26456-macOS.dmg
-size = 112659088
+size = 112658610
 
