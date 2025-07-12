@@ -52,6 +52,9 @@ mv prusa-fff/* non-caribou-fff/
 mv prusa-sla/* non-caribou-sla/
 rm -rf prusa-fff prusa-sla
 
+# Delete Caribou profiles vom Prusa download
+rm -fr non-caribou-fff/Caribou
+rm -f non-caribou-fff//Caribou.idx
 
 # Copy caribou-fff from script directory to download directory
 cp -r "$script_dir/caribou-fff" "$download_dir/"

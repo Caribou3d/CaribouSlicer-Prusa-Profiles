@@ -6,9 +6,10 @@ PROFILES_SCRIPT := ./create-profiles.sh
 DOWNLOAD_SCRIPT := ./download.sh
 OFFLINE_SCRIPT := ./create-offline.sh
 TEST_SCRIPT := ./create-test.sh
+PRUSA_SCRIPT := ./create-prusa.sh
 
 # Targets
-.PHONY: help profiles download offline clean all test
+.PHONY: help profiles download offline clean all test prusa
 
 help:
 	@echo "Available targets:"
@@ -16,6 +17,7 @@ help:
 	@echo "  make profiles   - Run the script to generate profiles from downloaded content"
 	@echo "  make offline    - Generate zipped offline profiles with manifests"
 	@echo "  make test       - Run the test setup using caribou-fff-test into processed-test"
+	@echo "  make prusa      - Create profiles for the PrusaSlicer"
 	@echo "  make clean      - Delete 'processed', and 'processed-test' directories"
 	@echo "  make all        - Run download, profiles, and offline packaging"
 
@@ -35,7 +37,11 @@ test:
 	@echo "Running test profile creation script..."
 	$(TEST_SCRIPT)
 
-clean:
-	rm -rf processed processed-test
+prusa:
+	@echo "Creating Prusa-compatible settings..."
+	$(PRUSA_SCRIPT)
 
-all: download profiles offline
+clean:
+	rm -rf download processed processed-test PrusaSlicer-settings-non-prusa-fff
+
+all: download profiles offline prusa
