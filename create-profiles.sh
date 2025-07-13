@@ -86,6 +86,15 @@ done
 for src in "${sources[@]}"; do
     folder=$(basename "$src")
     cp -r "$src" ./processed/upload/preset-repo/$folder
+
+
+    find "./processed/upload/preset-repo/$folder" -type f -name "*.ini" | while read -r ini_file; do
+        sed -i 's/non-prusa-fff/non-caribou-fff/g' "$ini_file"
+        sed -i 's/prusa-fff/non-caribou-fff/g' "$ini_file"
+        sed -i 's/non-prusa-sla/non-caribou-sla/g' "$ini_file"
+        sed -i 's/prusa-sla/non-caribou-sla/g' "$ini_file"
+    done
+
     for ini_file in ./processed/upload/preset-repo/"$folder"/*/*.ini; do
         vendor_name=$(basename $(dirname "$ini_file"))
         sed -i 's|config_update_url = .*|config_update_url = https://caribou3d.com/CaribouSlicer/preset-repo/settings-master/'"$vendor_name"'/|g' "$ini_file"
@@ -107,7 +116,7 @@ for src in "${sources[@]}"; do
         echo "[INFO] No .idx files found in $dir_path"
     fi
 
-    find ./processed/upload/preset-repo/"$folder"/* -type f ! \( -name "*.ini" -o -name "vendor_indices.zip" \) -exec rm -f {} +
+    find ./processed/upload/preset-repo/"$folder"/* -type f ! \( -name "*.ini" -o -name "*.idx" -o -iname "*.stl" -o -iname "*.svg" -o -iname "*.png" -o -iname "*.jpg" -o -name "vendor_indices.zip" \) -exec rm -f {} +
 done
 
 find "$repository_dest" -type f -name "*.ini" | while read -r ini_file; do
@@ -127,6 +136,7 @@ for idx_file in "$repository_dest"/*.idx; do
     version=$(awk 'NR==2 {print $1; exit}' "$idx_file")
     ini_file="$repository_dest/$vendor_name/${version}.ini"
     target_ini="$repository_dest/$vendor_name.ini"
+
 
     if [[ -f "$ini_file" ]]; then
         echo "[INFO] Copying versioned ini for $vendor_name"
